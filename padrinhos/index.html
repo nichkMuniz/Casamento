@@ -1,0 +1,1358 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Ingrid & Nicholas · Convite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    /* Palette — warmer paper + same terra story */
+    --paper:       #f6ece0;
+    --paper-soft:  #f1e2d1;
+    --paper-deep:  #ead4bd;
+    --terra:       #7e3e26;
+    --terra-deep:  #8a3522;
+    --terra-glow:  rgba(126,62,38,0.14);
+    --marrom:      #5a2c1e;
+    --ink:         #2b1409;
+    --ink-soft:    #6b3a26;
+    --ink-mute:    #9c6a4e;
+    --rule:        rgba(90,44,30,0.22);
+    --rule-soft:   rgba(90,44,30,0.10);
+
+    --font-serif:  "Cormorant Garamond", "Times New Roman", serif;
+    --font-sans:   "DM Sans", system-ui, -apple-system, sans-serif;
+    --font-mono:   "JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+
+  html, body { background: var(--paper); color: var(--ink); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+
+  /* subtle paper grain */
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(rgba(90,44,30,0.05) 1px, transparent 1px),
+      radial-gradient(rgba(126,62,38,0.04) 1px, transparent 1px);
+    background-size: 3px 3px, 7px 7px;
+    background-position: 0 0, 1px 2px;
+    opacity: 0.55;
+    z-index: 1;
+    mix-blend-mode: multiply;
+  }
+
+  /* ============ COVER (envelope screen) ============ */
+  .cover-screen {
+    position: fixed; inset: 0;
+    background: linear-gradient(180deg, #f6ece0 0%, #ead4bd 100%);
+    z-index: 50;
+    display: grid; place-items: center;
+    overflow: hidden;
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+  .cover-screen.is-open {
+    opacity: 0;
+    transform: translateY(-2%);
+    pointer-events: none;
+  }
+  .cover-inner {
+    text-align: center;
+    padding: 3rem 1.5rem;
+    max-width: 560px;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+  }
+  .cover-eyebrow {
+    font-family: var(--font-sans);
+    font-size: 10px;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: var(--terra-deep);
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.9s 0.15s forwards ease;
+  }
+  .cover-eyebrow span { display: inline-block; margin: 0 6px; opacity: 0.6; }
+
+  .monogram {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(120px, 28vw, 220px);
+    line-height: 0.85;
+    color: var(--ink);
+    letter-spacing: -0.04em;
+    opacity: 0;
+    animation: fadeUp 1.1s 0.35s forwards ease;
+  }
+  .monogram .amp {
+    color: var(--terra);
+    font-weight: 300;
+    margin: 0 -0.08em;
+    display: inline-block;
+    transform: translateY(-0.04em);
+  }
+  .cover-names {
+    font-family: var(--font-serif);
+    font-size: clamp(22px, 4vw, 30px);
+    font-weight: 400;
+    color: var(--ink-soft);
+    margin-top: 1.25rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 1s 0.55s forwards ease;
+  }
+
+  .cover-flourish {
+    display: flex; align-items: center; justify-content: center; gap: 14px;
+    margin: 2rem auto 0.5rem;
+    color: var(--terra);
+    opacity: 0;
+    animation: fadeUp 1s 0.75s forwards ease;
+  }
+  .cover-flourish .line { width: 60px; height: 0.5px; background: var(--terra); opacity: 0.5; }
+  .cover-flourish .diamond { width: 6px; height: 6px; background: var(--terra); transform: rotate(45deg); }
+
+  .cover-date {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    letter-spacing: 0.3em;
+    color: var(--ink-soft);
+    margin-top: 0.5rem;
+    opacity: 0;
+    animation: fadeUp 1s 0.9s forwards ease;
+  }
+  .cover-meta {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-top: 0.85rem;
+    opacity: 0;
+    animation: fadeUp 1s 1.05s forwards ease;
+  }
+
+  .open-btn {
+    margin-top: 3.25rem;
+    background: transparent;
+    border: 0.5px solid var(--terra);
+    color: var(--terra-deep);
+    font-family: var(--font-sans);
+    font-size: 11px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    padding: 18px 32px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease, letter-spacing 0.3s ease;
+    opacity: 0;
+    animation: fadeUp 1s 1.2s forwards ease;
+    position: relative;
+  }
+  .open-btn:hover { background: var(--terra); color: #fff; letter-spacing: 0.36em; }
+  .open-btn:active { transform: scale(0.98); }
+  .open-btn .arrow { display: inline-block; margin-left: 10px; transition: transform 0.3s ease; }
+  .open-btn:hover .arrow { transform: translateY(2px); }
+
+  /* Wax seal decorative circle */
+  .seal {
+    position: absolute;
+    bottom: 8%; right: 8%;
+    width: 96px; height: 96px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #d97050 0%, #a8412a 60%, #6a2615 100%);
+    box-shadow:
+      0 8px 22px rgba(106,38,21,0.35),
+      inset 0 -6px 14px rgba(0,0,0,0.25),
+      inset 0 4px 10px rgba(255,200,170,0.25);
+    display: grid; place-items: center;
+    color: #f6e7d8;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 28px;
+    letter-spacing: -0.04em;
+    transform: rotate(-8deg);
+    opacity: 0;
+    animation: sealIn 1.2s 1.4s forwards ease;
+  }
+  .seal::before {
+    content: "";
+    position: absolute; inset: 6px;
+    border: 0.5px dashed rgba(246,231,216,0.5);
+    border-radius: 50%;
+  }
+  .seal-top {
+    position: absolute;
+    top: 8%; left: 8%;
+    font-family: var(--font-sans);
+    font-size: 9px;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    writing-mode: vertical-rl;
+    opacity: 0;
+    animation: fadeUp 1s 1.6s forwards ease;
+  }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes sealIn { from { opacity: 0; transform: rotate(-30deg) scale(0.6); } to { opacity: 1; transform: rotate(-8deg) scale(1); } }
+
+  /* ============ STICKY MINI HEADER ============ */
+  .mini-nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 40;
+    background: rgba(246,236,224,0.85);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 0.5px solid var(--rule-soft);
+    transform: translateY(-100%);
+    transition: transform 0.4s ease;
+  }
+  .mini-nav.is-visible { transform: translateY(0); }
+  .mini-nav-inner {
+    max-width: 720px; margin: 0 auto;
+    padding: 14px 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem;
+  }
+  .mini-mono {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 20px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .mini-mono .amp { color: var(--terra); }
+  .mini-date {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    color: var(--ink-mute);
+  }
+  .mini-rsvp {
+    font-family: var(--font-sans);
+    font-size: 10px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--terra-deep);
+    text-decoration: none;
+    border: 0.5px solid var(--terra);
+    border-radius: 999px;
+    padding: 8px 16px;
+    transition: background 0.25s ease, color 0.25s ease;
+  }
+  .mini-rsvp:hover { background: var(--terra); color: #fff; }
+  @media (max-width: 540px) {
+    .mini-date { display: none; }
+  }
+
+  /* ============ INVITATION CONTENT ============ */
+  .invite {
+    position: relative;
+    z-index: 2;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 6rem 1.5rem 4rem;
+  }
+
+  /* Reveal animation */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 1s ease, transform 1s ease; }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+
+  /* SAVE THE DATE / hero */
+  .hero {
+    text-align: center;
+    padding: 2rem 0 3.5rem;
+    border-bottom: 0.5px solid var(--rule-soft);
+    /* Estado inicial: ocupa a tela inteira, conteúdo centralizado */
+    min-height: calc(100vh - 6rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .hero-label {
+    font-size: 10px;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: var(--terra-deep);
+    margin-bottom: 1.5rem;
+  }
+  .hero-names {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(56px, 12vw, 96px);
+    line-height: 0.95;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .hero-names .amp { color: var(--terra); font-weight: 300; margin: 0 -0.04em; }
+  .hero-sub {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-top: 1.25rem;
+  }
+
+  /* COUNTDOWN */
+  .countdown {
+    margin-top: 2.5rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .cd-cell {
+    background: rgba(255,255,255,0.35);
+    border: 0.5px solid var(--rule-soft);
+    border-radius: 4px;
+    padding: 14px 6px 10px;
+    text-align: center;
+  }
+  .cd-num {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(28px, 6vw, 40px);
+    line-height: 1;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .cd-label {
+    font-family: var(--font-sans);
+    font-size: 9px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-top: 8px;
+  }
+
+  /* EVENT INFO ROW */
+  .event-row {
+    margin-top: 2.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+    padding: 1.5rem 0;
+    border-top: 0.5px solid var(--rule-soft);
+  }
+  .event-cell { text-align: center; }
+  .event-cell .k {
+    font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--ink-mute); margin-bottom: 8px;
+  }
+  .event-cell .v {
+    font-family: var(--font-serif); font-size: 18px; color: var(--ink);
+  }
+  .event-cell .vmono { font-family: var(--font-mono); font-size: 13px; color: var(--ink); letter-spacing: 0.1em; }
+
+  /* SECTION SCAFFOLD */
+  section.s { padding: 4rem 0; border-bottom: 0.5px solid var(--rule-soft); }
+  section.s:last-of-type { border-bottom: none; }
+  .s-eyebrow {
+    text-align: center;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--terra-deep);
+    margin-bottom: 0.6rem;
+  }
+  .s-title {
+    text-align: center;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(32px, 6vw, 46px);
+    line-height: 1.05;
+    color: var(--ink);
+    margin-bottom: 2rem;
+  }
+  .ornament {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    margin: 0 auto 2rem;
+    max-width: 200px;
+    color: var(--terra);
+  }
+  .ornament .line { flex: 1; height: 0.5px; background: var(--terra); opacity: 0.4; }
+  .ornament .dot { width: 4px; height: 4px; background: var(--terra); border-radius: 50%; }
+
+  /* LETTER (mensagem dos noivos) */
+  .letter {
+    background: rgba(255,255,255,0.4);
+    border: 0.5px solid var(--rule-soft);
+    border-radius: 2px;
+    padding: 3rem 2.25rem;
+    box-shadow: 0 2px 0 rgba(255,255,255,0.4) inset, 0 30px 60px -40px rgba(90,44,30,0.25);
+    position: relative;
+  }
+  .letter::before, .letter::after {
+    content: "";
+    position: absolute; left: 50%; transform: translateX(-50%);
+    width: 36px; height: 0.5px; background: var(--terra); opacity: 0.5;
+  }
+  .letter::before { top: 14px; }
+  .letter::after { bottom: 14px; }
+
+  .letter p {
+    font-family: var(--font-serif);
+    font-size: 17px;
+    line-height: 1.75;
+    color: var(--ink);
+    margin-bottom: 1rem;
+    text-wrap: pretty;
+  }
+  .letter p.lead::first-letter {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 3.6em;
+    float: left;
+    line-height: 0.9;
+    margin: 0.1em 0.12em 0 -0.05em;
+    color: var(--terra);
+  }
+  .letter .sign {
+    margin-top: 1.75rem;
+    text-align: right;
+  }
+  .letter .sign .label {
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .letter .sign .names {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 28px;
+    color: var(--terra-deep);
+    margin-top: 4px;
+  }
+
+  /* PALETTE */
+  .palette {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .sw {
+    text-align: center;
+  }
+  .sw-disc {
+    width: 84px; height: 84px;
+    border-radius: 50%;
+    margin: 0 auto 14px;
+    box-shadow: 0 6px 22px -12px rgba(90,44,30,0.5);
+    position: relative;
+  }
+  .sw-disc::after {
+    content: "";
+    position: absolute; inset: 6px;
+    border: 0.5px solid rgba(255,255,255,0.25);
+    border-radius: 50%;
+  }
+  .sw-name {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 18px;
+    color: var(--ink);
+  }
+  .sw-hex {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--ink-mute);
+    margin-top: 4px;
+  }
+
+  /* DRESS CODE CARDS */
+  .dress-card {
+    background: rgba(255,255,255,0.4);
+    border: 0.5px solid var(--rule-soft);
+    border-radius: 2px;
+    padding: 2rem 1.75rem;
+    margin-top: 1.5rem;
+  }
+  .dress-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    border-bottom: 0.5px solid var(--rule-soft);
+    padding-bottom: 1rem;
+    margin-bottom: 1.25rem;
+    gap: 1rem;
+  }
+  .dress-head .group {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 28px;
+    color: var(--ink);
+  }
+  .dress-head .num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--ink-mute);
+  }
+  .dress-line {
+    display: grid;
+    grid-template-columns: 22px 1fr auto;
+    gap: 14px;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 0.5px solid var(--rule-soft);
+  }
+  .dress-line:last-child { border-bottom: none; }
+  .dress-chip {
+    width: 22px; height: 22px; border-radius: 50%;
+    box-shadow: 0 2px 8px -4px rgba(90,44,30,0.5);
+  }
+  .dress-name {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    color: var(--ink);
+  }
+  .dress-sub {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--ink-mute);
+    margin-top: 2px;
+    line-height: 1.5;
+  }
+  .dress-hex {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+  .outfit-strip {
+    display: flex; gap: 6px;
+    margin-top: 1.25rem;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .outfit-piece {
+    flex: 1;
+    padding: 1rem 0.75rem;
+    text-align: center;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .outfit-piece .pn {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 16px;
+    letter-spacing: 0;
+    text-transform: none;
+    margin-top: 4px;
+    display: block;
+  }
+  .obs {
+    margin-top: 1.5rem;
+    padding: 1rem 1.25rem;
+    background: var(--terra-glow);
+    border-left: 1px solid var(--terra);
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--marrom);
+    line-height: 1.6;
+  }
+  .obs code { font-family: var(--font-mono); font-style: normal; font-size: 12px; background: rgba(255,255,255,0.4); padding: 1px 6px; border-radius: 2px; }
+
+  /* REFERENCE IMAGES */
+  .ref-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  @media (max-width: 480px) { .ref-grid { grid-template-columns: 1fr; } }
+  .ref-card {
+    position: relative;
+    background: var(--paper-deep);
+    border-radius: 2px;
+    overflow: hidden;
+    aspect-ratio: 3/4;
+    cursor: zoom-in;
+  }
+  .ref-card img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    filter: saturate(0.92) contrast(1.02);
+    transition: transform 0.6s ease;
+  }
+  .ref-card:hover img { transform: scale(1.04); }
+  .ref-loader {
+    position: absolute; inset: 0;
+    display: grid; place-items: center;
+    color: var(--ink-mute);
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em;
+    background: repeating-linear-gradient(45deg, var(--paper-deep) 0 12px, var(--paper-soft) 12px 24px);
+  }
+  .ref-overlay {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 12px 14px 10px;
+    background: linear-gradient(180deg, transparent 0%, rgba(43,20,9,0.7) 100%);
+    color: #fff5e9;
+    display: flex; align-items: flex-end; justify-content: space-between;
+    gap: 8px;
+  }
+  .ref-overlay .tag {
+    font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase;
+    background: rgba(255,255,255,0.15); padding: 4px 8px; border-radius: 999px;
+    backdrop-filter: blur(8px);
+  }
+  .ref-overlay .desc {
+    font-family: var(--font-serif); font-style: italic;
+    font-size: 13px; max-width: 70%;
+    line-height: 1.3;
+  }
+
+  /* LIGHTBOX */
+  .lightbox {
+    position: fixed; inset: 0;
+    background: rgba(43,20,9,0.88);
+    backdrop-filter: blur(8px);
+    z-index: 60;
+    display: none;
+    place-items: center;
+    padding: 2rem;
+    cursor: zoom-out;
+  }
+  .lightbox.open { display: grid; }
+  .lightbox img { max-width: 100%; max-height: 90vh; box-shadow: 0 40px 80px -20px rgba(0,0,0,0.6); }
+  .lightbox .close {
+    position: absolute; top: 1rem; right: 1rem;
+    background: none; border: 0.5px solid rgba(255,245,233,0.4);
+    color: #fff5e9;
+    width: 36px; height: 36px; border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  /* RSVP */
+  .rsvp-card {
+    background: rgba(255,255,255,0.4);
+    border: 0.5px solid var(--rule-soft);
+    border-radius: 2px;
+    padding: 2.5rem 2rem;
+  }
+  .rsvp-intro {
+    text-align: center;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(22px, 4vw, 28px);
+    color: var(--ink-soft);
+    margin-bottom: 1.75rem;
+    line-height: 1.45;
+  }
+  .field { margin-bottom: 1.25rem; }
+  .field-label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+  }
+  .field-input {
+    width: 100%;
+    background: rgba(255,255,255,0.5);
+    border: none;
+    border-bottom: 0.5px solid var(--rule);
+    padding: 10px 2px;
+    font-family: var(--font-serif);
+    font-size: 18px;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .field-input::placeholder { color: var(--ink-mute); font-style: italic; opacity: 0.7; }
+  .field-input:focus { border-color: var(--terra); background: rgba(255,255,255,0.8); }
+
+  .radio-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .radio-cell { flex: 1; min-width: 140px; }
+  .radio-cell input { display: none; }
+  .radio-cell label {
+    display: block;
+    text-align: center;
+    padding: 14px 12px;
+    border: 0.5px solid var(--rule);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: rgba(255,255,255,0.3);
+  }
+  .radio-cell label .top {
+    font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .radio-cell label .main {
+    font-family: var(--font-serif); font-style: italic;
+    font-size: 18px; color: var(--ink);
+    margin-top: 4px;
+  }
+  .radio-cell label:hover { border-color: var(--terra); }
+  .radio-cell input:checked + label {
+    background: var(--terra);
+    border-color: var(--terra);
+  }
+  .radio-cell input:checked + label .top { color: rgba(255,245,233,0.7); }
+  .radio-cell input:checked + label .main { color: #fff5e9; }
+
+  .submit-btn {
+    width: 100%; padding: 18px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    border-radius: 2px;
+    font-family: var(--font-sans);
+    font-size: 11px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.25s ease, letter-spacing 0.25s ease;
+  }
+  .submit-btn:hover { background: var(--terra-deep); letter-spacing: 0.36em; }
+  .submit-btn:active { transform: scale(0.99); }
+  .err-msg { font-size: 12px; color: var(--terra-deep); margin-bottom: 10px; display: none; font-style: italic; font-family: var(--font-serif); }
+
+  .rsvp-success {
+    display: none;
+    text-align: center;
+    padding: 1.5rem 0.5rem;
+  }
+  .rsvp-success .check {
+    width: 60px; height: 60px;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    background: var(--terra);
+    display: grid; place-items: center;
+    color: #fff5e9;
+    font-size: 28px;
+    animation: pop 0.4s ease;
+  }
+  @keyframes pop { 0% { transform: scale(0.5); opacity: 0; } 60% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1; } }
+  .rsvp-success .title {
+    font-family: var(--font-serif); font-style: italic;
+    font-size: 28px; color: var(--ink); margin-bottom: 0.5rem;
+  }
+  .rsvp-success .sub {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    max-width: 380px;
+    margin: 0 auto 1.5rem;
+  }
+  .text-btn {
+    background: none; border: none;
+    color: var(--terra-deep);
+    font-family: var(--font-sans);
+    font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase;
+    cursor: pointer;
+    border-bottom: 0.5px solid var(--terra);
+    padding-bottom: 4px;
+  }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 4rem 0 2rem;
+  }
+  .footer-mono {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 54px;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .footer-mono .amp { color: var(--terra); }
+  .footer-date {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.32em;
+    color: var(--ink-mute);
+    margin-top: 1.25rem;
+  }
+  .footer-coda {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin-top: 1.5rem;
+  }
+
+  /* Body lock during cover */
+  body.locked { overflow: hidden; }
+</style>
+</head>
+<body class="locked">
+
+<!-- ===================== COVER ===================== -->
+<div class="cover-screen" id="cover">
+  <div class="seal-top">Ingrid & Nicholas · MMXXVI</div>
+
+  <div class="cover-inner">
+    <p class="cover-eyebrow"><span>·</span> Casamento <span>·</span></p>
+    <div class="monogram">I&amp;N</div>
+    <p class="cover-names">Nicholas <span style="color:var(--terra);">·</span> Ingrid</p>
+
+    <div class="cover-flourish">
+      <div class="line"></div>
+      <div class="diamond"></div>
+      <div class="line"></div>
+    </div>
+    <p class="cover-date">31 · 10 · 2026</p>
+    <button class="open-btn" id="openBtn" type="button">
+      Abrir o convite <span class="arrow">↓</span>
+    </button>
+  </div>
+
+  <div class="seal" aria-hidden="true">I&amp;N</div>
+</div>
+
+<!-- ===================== MINI NAV ===================== -->
+<nav class="mini-nav" id="miniNav">
+  <div class="mini-nav-inner">
+    <div class="mini-mono">I<span class="amp">&amp;</span>N</div>
+    <div class="mini-date">31 · OUT · 2026</div>
+  </div>
+</nav>
+
+<!-- ===================== INVITE ===================== -->
+<main class="invite" id="invite">
+
+  <!-- HERO / SAVE THE DATE -->
+  <header class="hero reveal">
+    <p class="hero-label">— Save the date —</p>
+    <h1 class="hero-names">Ingrid &amp;
+Nicholas</h1>
+    <p class="hero-sub">vão se casar</p>
+
+    <div class="countdown" id="countdown" aria-live="polite">
+      <div class="cd-cell"><div class="cd-num" id="cd-d">—</div><div class="cd-label">Dias</div></div>
+      <div class="cd-cell"><div class="cd-num" id="cd-h">—</div><div class="cd-label">Horas</div></div>
+      <div class="cd-cell"><div class="cd-num" id="cd-m">—</div><div class="cd-label">Min</div></div>
+      <div class="cd-cell"><div class="cd-num" id="cd-s">—</div><div class="cd-label">Seg</div></div>
+    </div>
+
+    <div class="event-row">
+      <div class="event-cell">
+        <div class="k">Data</div>
+        <div class="v">31 · outubro</div>
+      </div>
+      <div class="event-cell">
+        <div class="k">Cerimônia</div>
+        <div class="v">16h30</div>
+      </div>
+      <div class="event-cell">
+        <div class="k">Local</div>
+        <div class="v">Rua Lagoa Dourada do Rancho, 206 - Casa Grande</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- RSVP -->
+  <section class="s reveal" id="rsvp" style="scroll-margin-top: 72px;">
+    <p class="s-eyebrow">— Confirmação de presença —</p>
+    <h2 class="s-title">Você estará com a gente?</h2>
+    <div class="ornament"><div class="line"></div><div class="dot"></div><div class="line"></div></div>
+
+    <div class="rsvp-card">
+      <p class="rsvp-intro">Com todo o carinho, queremos te perguntar: </p>
+       <p class="rsvp-intro"> Você aceita ser nosso padrinho ou nossa madrinha?</p> 
+
+      <div id="rsvp-form">
+        <div class="field">
+          <label class="field-label">Você aceita?</label>
+          <div class="radio-row">
+            <div class="radio-cell">
+              <input type="radio" name="presence" id="pres-sim" value="sim" />
+              <label for="pres-sim"><div class="top">Resposta</div><div class="main">Sim, eu aceito</div></label>
+            </div>
+            <div class="radio-cell">
+              <input type="radio" name="presence" id="pres-nao" value="nao" />
+              <label for="pres-nao"><div class="top">Resposta</div><div class="main">Não poderei</div></label>
+            </div>
+          </div>
+        </div>
+
+        <div id="name-field" class="field" hidden>
+          <label class="field-label" for="rsvp-name">Seu nome</label>
+          <input class="field-input" id="rsvp-name" type="text" placeholder="Como você se chama?" autocomplete="name" />
+        </div>
+
+        <div id="role-field" class="field" hidden>
+          <label class="field-label">Você será</label>
+          <div class="radio-row">
+            <div class="radio-cell">
+              <input type="radio" name="role" id="role-mad" value="Madrinha" />
+              <label for="role-mad"><div class="top">Madrinha</div><div class="main">Vou de vestido</div></label>
+            </div>
+            <div class="radio-cell">
+              <input type="radio" name="role" id="role-pad" value="Padrinho" />
+              <label for="role-pad"><div class="top">Padrinho</div><div class="main">Vou de suspensório</div></label>
+            </div>
+          </div>
+        </div>
+
+        <p class="err-msg" id="rsvp-error">— Por favor, preencha todos os campos antes de confirmar. —</p>
+        <button class="submit-btn" id="rsvp-submit" type="button">Confirmar</button>
+      </div>
+
+      <div class="rsvp-success" id="rsvp-success">
+        <div class="check">✓</div>
+        <div class="title" id="success-title">Presença confirmada</div>
+        <p class="sub" id="success-sub">Que alegria! Nicholas e Ingrid estão ansiosos para celebrar com você. Até o grande dia.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TUDO ABAIXO SÓ APARECE APÓS CONFIRMAR PRESENÇA ===== -->
+  <div id="post-confirm" hidden>
+
+  <!-- LETTER -->
+  <section class="s reveal">
+    <p class="s-eyebrow">— uma mensagem dos noivos —</p>
+    <h2 class="s-title">Obrigado por dizer sim</h2>
+    <div class="ornament"><div class="line"></div><div class="dot"></div><div class="line"></div></div>
+
+    <div class="letter">
+      <p class="lead">Escolher vocês para estarem ao nosso lado não foi difícil — foi a decisão mais óbvia e mais bonita que tomamos em todo o planejamento deste dia.</p>
+      <p>Ser padrinho ou madrinha é muito mais do que um título: é a nossa forma de dizer que vocês fazem parte da nossa história, que confiamos em vocês e que queremos pessoas especiais por perto no momento mais importante das nossas vidas.</p>
+      <p>Obrigado por cada mensagem, cada risada e por todo o carinho que já nos deram até aqui. Que este dia seja tão especial para vocês quanto será para nós.</p>
+      <div class="sign">
+        <div class="label">— com todo o nosso amor —</div>
+        <div class="names">Ingrid &amp; Nicholas</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PALETTE -->
+  <section class="s reveal">
+    <p class="s-eyebrow">— a paleta do casamento —</p>
+    <h2 class="s-title">Três cores, uma estação</h2>
+    <div class="ornament"><div class="line"></div><div class="dot"></div><div class="line"></div></div>
+
+    <div class="palette">
+      <div class="sw">
+        <div class="sw-disc" style="background:#7e3e26;"></div>
+        <div class="sw-name">Terracota</div>
+        <div class="sw-hex">#7e3e26</div>
+      </div>
+      <div class="sw">
+        <div class="sw-disc" style="background:#f5f0eb; box-shadow: 0 6px 22px -12px rgba(90,44,30,0.5), inset 0 0 0 0.5px rgba(90,44,30,0.2);"></div>
+        <div class="sw-name">Off-white</div>
+        <div class="sw-hex">#f5f0eb</div>
+      </div>
+      <div class="sw">
+        <div class="sw-disc" style="background:#5a2c1e;"></div>
+        <div class="sw-name">Marrom</div>
+        <div class="sw-hex">#5a2c1e</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MADRINHAS -->
+  <section class="s reveal traje-section" id="traje-madrinhas" hidden>
+    <p class="s-eyebrow">— Traje das madrinhas —</p>
+    <h2 class="s-title">Vestido longo, terracota</h2>
+    <div class="ornament"><div class="line"></div><div class="dot"></div><div class="line"></div></div>
+
+    <div class="dress-card">
+      <div class="dress-head">
+        <div class="group">Madrinhas</div>
+        <div class="num">N° 01 / 02</div>
+      </div>
+
+      <div class="dress-line">
+        <div class="dress-chip" style="background:#7e3e26;"></div>
+        <div>
+          <div class="dress-name">Vestido longo terracota</div>
+          <div class="dress-sub">Tom quente entre o coral e o tijolo — comprimento longo, tecido fluido.</div>
+        </div>
+        <div class="dress-hex">#7e3e26</div>
+      </div>
+
+      <div class="dress-line">
+        <div class="dress-chip" style="background:#c9a080; box-shadow: inset 0 0 0 0.5px rgba(90,44,30,0.3);"></div>
+        <div>
+          <div class="dress-name">Acessórios &amp; calçados</div>
+          <div class="dress-sub">Livre escolha. Sem obrigatoriedade — bijuterias e sapatos à vontade de cada madrinha.</div>
+        </div>
+        <div class="dress-hex">livre</div>
+      </div>
+    </div>
+
+    <div class="ref-grid" id="refs-m">
+      <div class="ref-card" data-src="madrinha-2-4k.png">
+        <div class="ref-loader">Carregando referência</div>
+        <div class="ref-overlay"><div class="desc">Vestido longo terracota, tecido fluido</div><div class="tag">tom · silhueta</div></div>
+      </div>
+      <div class="ref-card" data-src="madrinha.png">
+        <div class="ref-loader">Carregando referência</div>
+        <div class="ref-overlay"><div class="desc">Exemplo de madrinhas em terracota</div><div class="tag">composição</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PADRINHOS -->
+  <section class="s reveal traje-section" id="traje-padrinhos" hidden>
+    <p class="s-eyebrow">— Traje dos padrinhos —</p>
+    <h2 class="s-title">Branco, marrom &amp; suspensório</h2>
+    <div class="ornament"><div class="line"></div><div class="dot"></div><div class="line"></div></div>
+
+    <div class="dress-card">
+      <div class="dress-head">
+        <div class="group">Padrinhos</div>
+        <div class="num">N° 02 / 02</div>
+      </div>
+
+      <div class="dress-line">
+        <div class="dress-chip" style="background:#f5f0eb; box-shadow: inset 0 0 0 0.5px rgba(90,44,30,0.3);"></div>
+        <div>
+          <div class="dress-name">Camiseta branca</div>
+          <div class="dress-sub">Tom branco ou off-white — visual limpo e elegante.</div>
+        </div>
+        <div class="dress-hex">#f5f0eb</div>
+      </div>
+
+      <div class="dress-line">
+        <div class="dress-chip" style="background:#5a2c1e;"></div>
+        <div>
+          <div class="dress-name">Calça marrom</div>
+          <div class="dress-sub">Tom marrom médio a escuro — em harmonia com a paleta.</div>
+        </div>
+        <div class="dress-hex">#5a2c1e</div>
+      </div>
+
+      <div class="dress-line">
+        <div class="dress-chip" style="background:#7e3e26;"></div>
+        <div>
+          <div class="dress-name">Suspensório terracota</div>
+          <div class="dress-sub">O detalhe que une o visual dos padrinhos ao das madrinhas.</div>
+        </div>
+        <div class="dress-hex">#7e3e26</div>
+      </div>
+
+      <div class="outfit-strip">
+        <div class="outfit-piece" style="background:#f5f0eb; color: var(--ink); border: 0.5px solid rgba(90,44,30,0.15);">
+          Camiseta<span class="pn">Branca</span>
+        </div>
+        <div class="outfit-piece" style="background:#5a2c1e; color: #f5e8d8;">
+          Calça<span class="pn">Marrom</span>
+        </div>
+        <div class="outfit-piece" style="background:#7e3e26; color: #fff5e9;">
+          Suspensório<span class="pn">Terracota</span>
+        </div>
+      </div>
+
+      <div class="obs">
+        O suspensório terracota é o detalhe mais importante do traje masculino. Ao comprar, use o código <code>#7e3e26</code> como referência de tom.
+      </div>
+    </div>
+
+    <div class="ref-grid" id="refs-p">
+      <div class="ref-card" data-src="padrinho.jpg">
+        <div class="ref-loader">Carregando referência</div>
+        <div class="ref-overlay"><div class="desc">Camiseta branca com suspensório</div><div class="tag">detalhe · cor</div></div>
+      </div>
+      <div class="ref-card" data-src="padrinho-2.png">
+        <div class="ref-loader">Carregando referência</div>
+        <div class="ref-overlay"><div class="desc">Calça marrom + suspensório terracota</div><div class="tag">composição</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer reveal">
+    <div class="footer-mono">I<span class="amp">&amp;</span>N</div>
+    <div class="footer-date">31 · 10 · 2026 · 16h30</div>
+    <div class="footer-coda">— com amor, até lá —</div>
+  </footer>
+
+  </div><!-- /post-confirm -->
+
+</main>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" aria-hidden="true">
+  <button class="close" id="lightbox-close" type="button">×</button>
+  <img id="lightbox-img" alt="Referência ampliada" />
+</div>
+
+<script>
+  /* ============ CONFIGURAÇÃO DO SUPABASE ============ */
+  /* Cole abaixo os dados do seu projeto (Project Settings → API).
+     A chave anon é pública — use uma policy de RLS que só permita INSERT. */
+  const SUPABASE_URL = 'https://taemhirjpiyqvnwvtxcl.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRhZW1oaXJqcGl5cXZud3Z0eGNsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NDk1MTksImV4cCI6MjA5NDUyNTUxOX0.rvrCcDU0UyadEVs1Sc6L4ojiGrByaAp1c5eVz_zxqOU';
+
+  // Envia a confirmação para a tabela `confirmacoes` do Supabase
+  async function enviarParaSupabase(entry) {
+    // Se a configuração ainda não foi preenchida, não tenta enviar
+    if (SUPABASE_URL.includes('SEU-PROJETO') || SUPABASE_ANON_KEY.includes('COLE_SUA_CHAVE')) return;
+    try {
+      await fetch(SUPABASE_URL + '/rest/v1/confirmacoes', {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({
+          nome: entry.name || '',
+          papel: entry.role || '—',
+          resposta: entry.presence === 'sim' ? 'Aceitou' : 'Recusou',
+          data: new Date(entry.ts).toISOString()
+        })
+      });
+    } catch (e) { /* falha de rede não bloqueia a confirmação na tela */ }
+  }
+
+  /* ============ Cover open ============ */
+  const cover = document.getElementById('cover');
+  const openBtn = document.getElementById('openBtn');
+  const miniNav = document.getElementById('miniNav');
+
+  // Evita que o navegador restaure a posição de scroll ao recarregar,
+  // garantindo que o "save the date" seja sempre o primeiro frame.
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
+  function openInvite() {
+    cover.classList.add('is-open');
+    document.body.classList.remove('locked');
+    setTimeout(() => {
+      cover.style.display = 'none';
+      // Garante que começamos no topo, mostrando o frame "save the date"
+      window.scrollTo(0, 0);
+      requestAnimationFrame(triggerReveals);
+      // A partir daqui, um gesto real do usuário cancela a transição automática.
+      // (registrado só agora, para uma rolagem sobre a capa não cancelar antes da hora)
+      ['wheel', 'touchmove', 'keydown'].forEach(evt =>
+        window.addEventListener(evt, cancelAutoFocus, { passive: true, once: true })
+      );
+      // Admira o hero por alguns segundos e, em seguida, desce suave para o convite
+      autoFocusTimer = setTimeout(focusInvite, 2000);
+    }, 900);
+  }
+  openBtn.addEventListener('click', openInvite);
+
+  /* Rolagem animada com easing — sensação de "subir" suavemente */
+  function smoothScrollTo(targetY, duration) {
+    const startY = window.scrollY;
+    const diff = targetY - startY;
+    let startTs;
+    function step(ts) {
+      if (startTs === undefined) startTs = ts;
+      const elapsed = ts - startTs;
+      const t = Math.min(1, elapsed / duration);
+      // easeInOutCubic — começa devagar, acelera e desacelera no fim
+      const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      window.scrollTo(0, startY + diff * eased);
+      if (elapsed < duration) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  let inviteFocused = false;
+  let autoFocusTimer = null;
+  // Alvo da transição: o RSVP por padrão; se a pessoa já respondeu, o conteúdo
+  let focusTargetId = 'rsvp';
+
+  // Cancela a transição automática quando a pessoa interage de propósito
+  function cancelAutoFocus() {
+    inviteFocused = true;
+    if (autoFocusTimer) { clearTimeout(autoFocusTimer); autoFocusTimer = null; }
+  }
+
+  function focusInvite() {
+    autoFocusTimer = null;
+    if (inviteFocused) return;
+    inviteFocused = true;
+    const target = document.getElementById(focusTargetId);
+    if (!target) return;
+    const targetY = target.getBoundingClientRect().top + window.scrollY - 72;
+    smoothScrollTo(targetY, 1600);
+  }
+
+  /* ============ Scroll-triggered reveals ============ */
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+  reveals.forEach(r => io.observe(r));
+
+  function triggerReveals() {
+    // First-visible reveal hint
+    const first = document.querySelector('.hero.reveal');
+    if (first) first.classList.add('in');
+  }
+
+  /* Mini-nav visibility */
+  let lastScroll = 0;
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (y > 380) miniNav.classList.add('is-visible');
+    else miniNav.classList.remove('is-visible');
+    lastScroll = y;
+  }, { passive: true });
+
+  /* ============ Countdown ============ */
+  const targetDate = new Date('2026-10-31T16:30:00-03:00').getTime();
+  function tickCountdown() {
+    const now = Date.now();
+    let diff = Math.max(0, targetDate - now);
+    const d = Math.floor(diff / 86400000); diff -= d * 86400000;
+    const h = Math.floor(diff / 3600000);  diff -= h * 3600000;
+    const m = Math.floor(diff / 60000);    diff -= m * 60000;
+    const s = Math.floor(diff / 1000);
+    const pad = (n) => String(n).padStart(2, '0');
+    document.getElementById('cd-d').textContent = String(d);
+    document.getElementById('cd-h').textContent = pad(h);
+    document.getElementById('cd-m').textContent = pad(m);
+    document.getElementById('cd-s').textContent = pad(s);
+  }
+  tickCountdown();
+  setInterval(tickCountdown, 1000);
+
+  /* ============ Lazy reference images ============ */
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  document.getElementById('lightbox-close').addEventListener('click', () => lightbox.classList.remove('open'));
+  lightbox.addEventListener('click', (e) => { if (e.target === lightbox) lightbox.classList.remove('open'); });
+
+  document.querySelectorAll('.ref-card').forEach(card => {
+    const src = card.dataset.src;
+    const img = new Image();
+    img.alt = 'Referência de traje';
+    img.onload = () => {
+      const loader = card.querySelector('.ref-loader');
+      if (loader) loader.remove();
+      card.insertBefore(img, card.firstChild);
+    };
+    img.onerror = () => {
+      const loader = card.querySelector('.ref-loader');
+      if (loader) loader.textContent = 'Imagem indisponível';
+    };
+    img.src = src;
+
+    card.addEventListener('click', () => {
+      if (!img.complete) return;
+      lightboxImg.src = src;
+      lightbox.classList.add('open');
+    });
+  });
+
+  /* ============ RSVP ============ */
+  // Chave do cache local — guarda a resposta para não pedir os dados de novo
+  const RSVP_STORE_KEY = 'rsvp-nicholas-ingrid';
+
+  function saveResponse(entry) {
+    try { localStorage.setItem(RSVP_STORE_KEY, JSON.stringify(entry)); } catch(e) {}
+  }
+  function readResponse() {
+    try { return JSON.parse(localStorage.getItem(RSVP_STORE_KEY)); } catch(e) { return null; }
+  }
+
+  // Mostra o conteúdo de quem aceitou (com o traje certo) e esconde o formulário
+  function showAccepted(entry, animate) {
+    const post = document.getElementById('post-confirm');
+    post.hidden = false;
+    post.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+    const isMadrinha = entry.role === 'Madrinha';
+    document.getElementById('traje-madrinhas').hidden = !isMadrinha;
+    document.getElementById('traje-padrinhos').hidden = isMadrinha;
+    document.getElementById('rsvp').style.display = 'none';
+    // A transição passa a mirar o conteúdo, já que o RSVP saiu de cena
+    focusTargetId = 'post-confirm';
+    if (animate) post.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // Mostra a mensagem de despedida de quem recusou
+  function showDeclined(entry) {
+    const name = entry && entry.name;
+    document.getElementById('success-title').textContent = name ? `Que pena, ${name}…` : 'Que pena…';
+    document.getElementById('success-sub').textContent =
+      'Sentiremos sua falta, mas agradecemos por nos avisar com carinho. Estamos com você em pensamento.';
+    document.querySelectorAll('.rsvp-intro').forEach(p => p.style.display = 'none');
+    document.getElementById('rsvp-form').style.display = 'none';
+    document.getElementById('rsvp-success').style.display = 'block';
+  }
+
+  // O nome aparece para qualquer resposta; o "você será" só quando aceita (Sim).
+  const nameField = document.getElementById('name-field');
+  const roleField = document.getElementById('role-field');
+  document.querySelectorAll('input[name="presence"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      nameField.hidden = false;                 // pede o nome em ambos os casos
+      const isSim = radio.value === 'sim';
+      roleField.hidden = !isSim;                // papel só faz sentido se aceita
+      // Ao recusar, limpa o papel para não gravar um traje numa recusa
+      if (!isSim) document.querySelectorAll('input[name="role"]').forEach(r => r.checked = false);
+      document.getElementById('rsvp-error').style.display = 'none';
+    });
+  });
+
+  document.getElementById('rsvp-submit').addEventListener('click', async () => {
+    const name = document.getElementById('rsvp-name').value.trim();
+    const role = document.querySelector('input[name="role"]:checked');
+    const presence = document.querySelector('input[name="presence"]:checked');
+    const errEl = document.getElementById('rsvp-error');
+    // Precisa responder Sim/Não e informar o nome; se aceitou, o papel também
+    if (!presence || !name || (presence.value === 'sim' && !role)) {
+      errEl.style.display = 'block';
+      return;
+    }
+    errEl.style.display = 'none';
+    const entry = { name, role: role ? role.value : '', presence: presence.value, ts: Date.now() };
+    // Guarda no cache do navegador (não precisa preencher de novo nas próximas visitas)
+    saveResponse(entry);
+    // Registra no banco de dados (Supabase) para você acompanhar as respostas
+    enviarParaSupabase(entry);
+    try {
+      if (window.storage && window.storage.set) {
+        await window.storage.set('rsvp:' + entry.ts, JSON.stringify(entry), true);
+      }
+    } catch(e) {}
+
+    if (presence.value === 'sim') {
+      showAccepted(entry, true);
+    } else {
+      showDeclined(entry);
+    }
+  });
+
+  // Ao carregar: se já houver resposta salva, aplica o estado sem pedir dados de novo
+  (function restoreResponse() {
+    const saved = readResponse();
+    if (!saved || !saved.presence) return;
+    if (saved.presence === 'sim') showAccepted(saved, false);
+    else showDeclined(saved);
+  })();
+
+  /* Esc closes lightbox */
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') lightbox.classList.remove('open');
+  });
+</script>
+
+</body>
+</html>
