@@ -204,7 +204,7 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--warm);m
   box-shadow:0 3px 12px rgba(30,18,12,.25);
 }
 .modal-photo{
-  position:relative;aspect-ratio:4/3;
+  position:relative;aspect-ratio:4/3;flex:0 0 auto;
   background-size:contain;background-position:center;background-repeat:no-repeat;
   background-color:#f5e8e0;
 }
@@ -265,6 +265,10 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--warm);m
   position:relative;box-shadow:0 30px 80px rgba(30,18,12,.25);
   animation:modalIn .25s cubic-bezier(.2,.8,.3,1);
   overflow:hidden;
+  /* altura travada na tela: o miolo rola por dentro e o X fica sempre alcançável */
+  max-height:calc(100vh - 2rem);
+  max-height:calc(100dvh - 2rem);
+  display:flex;flex-direction:column;
 }
 @keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(12px)}to{opacity:1;transform:none}}
 .modal-close{
@@ -278,8 +282,13 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--warm);m
 .modal-emoji{
   font-size:4rem;padding:2rem;text-align:center;
   background:linear-gradient(135deg,#fdf0ea,#f5e8e0);
+  flex:0 0 auto;
 }
-.modal-body{padding:1.5rem 1.8rem 2rem}
+.modal-body{
+  padding:1.5rem 1.8rem 2rem;
+  overflow-y:auto;overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+}
 .modal-title{
   font-family:'Cormorant Garamond',serif;
   font-size:1.6rem;font-weight:400;color:#3a2e28;
@@ -319,6 +328,16 @@ body{font-family:'Nunito',sans-serif;background:var(--cream);color:var(--warm);m
   line-height:0;
 }
 .qr-img{display:block;width:180px;height:180px}
+/* telas baixas: encolhe a mídia e o QR para caber mais conteúdo sem rolagem */
+@media(max-height:760px){
+  .modal-photo{aspect-ratio:auto;height:140px}
+  .modal-emoji{aspect-ratio:auto;font-size:3rem;padding:1.2rem}
+  .qr-img{width:150px;height:150px}
+  .modal-body{padding:1.2rem 1.5rem 1.5rem}
+}
+@media(max-width:420px){
+  .qr-img{width:160px;height:160px}
+}
 .qr-hint{
   margin-top:.7rem;font-size:.7rem;color:var(--sage);
   letter-spacing:.04em;
@@ -631,6 +650,7 @@ function openModal(id){
   const cb=document.getElementById('copy-btn');
   cb.textContent='Copiar chave Pix';cb.classList.remove('ok');
   document.getElementById('qr-img').src='imagens/qr/pix-'+id+'.svg';
+  document.querySelector('.modal-body').scrollTop=0;
   document.getElementById('backdrop').classList.add('open');
 }
 
@@ -696,6 +716,8 @@ msgToggle.onclick=function(){
   wizard.classList.add('open');
   goStep(1);
   fNome.focus();
+  // o miolo do modal rola por dentro: traz o wizard para a área visível
+  wizard.scrollIntoView({behavior:'smooth',block:'nearest'});
 };
 
 document.getElementById('wiz-next').onclick=()=>{goStep(2);fMsg.focus()};
