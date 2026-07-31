@@ -523,7 +523,8 @@ footer strong{color:#e8b07a;font-style:normal}
         <div class="qr-wrap"><img class="qr-img" id="qr-img" alt="QR Code Pix" width="180" height="180"></div>
         <p class="qr-hint">O valor do presente já vem preenchido ✨</p>
         <div class="pix-sep"><span>ou</span></div>
-        <button class="copy-btn" id="copy-btn">Copiar chave Pix</button>
+        <button class="copy-btn" id="copy-btn">Copiar código Pix</button>
+        <p class="qr-hint">Cole em "Pix Copia e Cola" — vai com o valor junto</p>
       </div>
       <button class="msg-toggle" id="msg-toggle">💌 Deixar uma mensagem para o casal</button>
 
@@ -570,7 +571,8 @@ footer strong{color:#e8b07a;font-style:normal}
 </footer>
 
 <script>
-const PIX = '48693633805';
+// códigos Pix "copia e cola" (BR Code) por presente — chave + valor, gerados junto com os QRs
+const PIX_CODES = {"1":"00020101021126330014br.gov.bcb.pix0111486936338055204000053039865406350.005802BR5917NICHOLAS E INGRID6009SAO PAULO62070503***630442C6","2":"00020101021126330014br.gov.bcb.pix0111486936338055204000053039865406950.005802BR5917NICHOLAS E INGRID6009SAO PAULO62070503***63041C64","3":"00020101021126330014br.gov.bcb.pix0111486936338055204000053039865406600.005802BR5917NICHOLAS E INGRID6009SAO PAULO62070503***63041BA6","4":"00020101021126330014br.gov.bcb.pix0111486936338055204000053039865406890.005802BR5917NICHOLAS E INGRID6009SAO PAULO62070503***63040277","5":"00020101021126330014br.gov.bcb.pix01114869363380552040000530398654071000.005802BR5917NICHOLAS E INGRID6009SAO PAULO62070503***63041E77","6":"00020101021126330014br.gov.bcb.pix0111486936338055204000053039865406780.005802BR5917NICHOLAS E INGRID6009SAO PAULO62070503***6304C8CB","7":"00020101021126330014br.gov.bcb.pix0111486936338055204000053039865406420.005802BR5917NICHOLAS E INGRID6009SAO PAULO62070503***6304CE79","8":"00020101021126330014br.gov.bcb.pix0111486936338055204000053039865406310.005802BR5917NICHOLAS E INGRID6009SAO PAULO62070503***63048FB8","9":"00020101021126330014br.gov.bcb.pix0111486936338055204000053039865406150.005802BR5917NICHOLAS E INGRID6009SAO PAULO62070503***6304F1A6","10":"00020101021126330014br.gov.bcb.pix0111486936338055204000053039865406400.005802BR5917NICHOLAS E INGRID6009SAO PAULO62070503***6304A8C6","11":"00020101021126330014br.gov.bcb.pix0111486936338055204000053039865406680.005802BR5917NICHOLAS E INGRID6009SAO PAULO62070503***6304917B","12":"00020101021126330014br.gov.bcb.pix0111486936338055204000053039865406550.005802BR5917NICHOLAS E INGRID6009SAO PAULO62070503***63048747"};
 
 // Supabase (mesmo projeto dos convites) — grava as mensagens do casal.
 // Chave anon é pública por definição; a tabela só aceita INSERT.
@@ -650,7 +652,7 @@ function openModal(id){
   resetWizard();
   document.getElementById('thanks').style.display='none';
   const cb=document.getElementById('copy-btn');
-  cb.textContent='Copiar chave Pix';cb.classList.remove('ok');
+  cb.textContent='Copiar código Pix';cb.classList.remove('ok');
   document.getElementById('qr-img').src='imagens/qr/pix-'+id+'.svg';
   document.querySelector('.modal-body').scrollTop=0;
   document.getElementById('backdrop').classList.add('open');
@@ -683,8 +685,9 @@ function botaoCopiar(btn,texto,rotulo){
   });
 }
 
+// copia o código do presente aberto: mesma chave e mesmo valor do QR
 document.getElementById('copy-btn').onclick=function(){
-  botaoCopiar(this,PIX,'Copiar chave Pix');
+  botaoCopiar(this,PIX_CODES[current.id],'Copiar código Pix');
 };
 
 // WIZARD DA MENSAGEM
